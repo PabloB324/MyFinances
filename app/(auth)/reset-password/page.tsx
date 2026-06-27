@@ -13,11 +13,31 @@ export default function ResetPasswordPage() {
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    // Supabase injects the session from the reset link hash automatically
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) setReady(true)
-      else setError('El link expiró o ya fue usado. Solicita uno nuevo.')
+    let resolved = false
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        resolved = true
+        setReady(true)
+      }
     })
+
+    // Hash may have been processed before this component mounts
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        resolved = true
+        setReady(true)
+      }
+    })
+
+    const timer = setTimeout(() => {
+      if (!resolved) setError('El link expiró o ya fue usado. Solicita uno nuevo.')
+    }, 5000)
+
+    return () => {
+      subscription.unsubscribe()
+      clearTimeout(timer)
+    }
   }, [])
 
   async function handleSubmit(e: React.FormEvent) {

@@ -10,6 +10,11 @@ export default function RootPage() {
 
   useEffect(() => {
     if (loading) return
+    // Recovery links land here with #type=recovery — send to reset form
+    if (window.location.hash.includes('type=recovery')) {
+      router.replace('/reset-password')
+      return
+    }
     if (user) {
       router.replace('/dashboard')
     } else {
