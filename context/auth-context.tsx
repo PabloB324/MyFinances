@@ -57,6 +57,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        // Redirect to reset form regardless of which page the link landed on
+        if (!window.location.pathname.includes('reset-password')) {
+          window.location.replace('/reset-password')
+        }
+        setLoading(false)
+        return
+      }
       if (session?.user) {
         setUser(await buildUser(session.user))
       } else {
