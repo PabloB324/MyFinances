@@ -1,26 +1,93 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* Colores del tema original iOS MyFinances */
+  --color-income: #10b981;
+  --color-income-light: #d1fae5;
+  --color-expense: #ef4444;
+  --color-expense-light: #fee2e2;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Azul/teal — color tint original */
+  --color-primary: #0097cf;
+  --color-primary-light: #e0f4fb;
+
+  /* Light mode — extraído de FinanceSupport.swift */
+  --color-bg: #ecf5fa;
+  --color-surface: #ffffff;
+  --color-surface-alt: #e7f0f7;
+  --color-border: #c8dceb;
+  --color-text: #0f1e32;
+  --color-text-muted: #517b9c;
+
+  /* Hero gradient (dashboard card) */
+  --color-hero-start: #007db8;
+  --color-hero-end: #005f96;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  @theme {
+    --color-primary: #00c8f0;
+    --color-primary-light: #0a2a3a;
+    --color-bg: #0d1f30;
+    --color-surface: #132a3c;
+    --color-surface-alt: #1a364b;
+    --color-border: #1e3f56;
+    --color-text: #ffffff;
+    --color-text-muted: #7a9cb4;
+    --color-hero-start: #101f2e;
+    --color-hero-end: #162840;
   }
 }
 
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  background-color: var(--color-bg);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  overscroll-behavior-y: none;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.tab-bar-height {
+  height: calc(4rem + env(safe-area-inset-bottom, 0px));
+}
+
+.main-content {
+  padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* Todos los modales deben superar z-index de la tab bar (z-50 = 50) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background-color: rgb(0 0 0 / 0.5);
+}
+
+.modal-sheet {
+  width: 100%;
+  max-width: 32rem;
+  border-radius: 1.5rem 1.5rem 0 0;
+  background-color: var(--color-surface);
+  padding: 1.5rem 1.5rem calc(env(safe-area-inset-bottom, 0px) + 1.5rem);
+  box-shadow: 0 -4px 32px rgb(0 0 0 / 0.2);
 }
